@@ -1,6 +1,7 @@
 import 'package:aladl_project/guess_app/guess_screen.dart';
 import 'package:aladl_project/hello_app/hello_screen.dart';
 import 'package:aladl_project/quiz_app/quiz_home_screen.dart';
+import 'package:aladl_project/toggl_clone/time_entry_screen.dart';
 import 'package:aladl_project/toggl_clone/toggl_home_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -33,6 +34,10 @@ class MyApp extends StatelessWidget {
       // home: GuessScreen(),
       // home: QuizHomeScreen(),
       home: TogglHomeScreen(),
+
+      routes: {
+        TimeEntryScreen.addEntry: (context) => TimeEntryScreen(),
+      },
     );
   }
 }

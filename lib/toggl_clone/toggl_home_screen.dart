@@ -14,6 +14,7 @@ class TogglHomeScreen extends StatefulWidget {
 
   TimeEntry? runningEntry;
 
+
   @override
   _TogglHomeScreenState createState() => _TogglHomeScreenState();
 }
@@ -32,6 +33,9 @@ class _TogglHomeScreenState extends State<TogglHomeScreen> {
 
   void handleFloatButtonAction() {
 
+    if (actionIcon.icon == Icons.add) {
+      Navigator.pushNamed(context, TimeEntryScreen.addEntry);
+    }
 
   }
 
@@ -136,6 +140,10 @@ class _TogglHomeScreenState extends State<TogglHomeScreen> {
             ),
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: actionIcon,
+        onPressed: handleFloatButtonAction,
       ),
     );
   }

@@ -29,8 +29,20 @@ class _TogglHomeScreenState extends State<TogglHomeScreen> {
   TimeEntry? runningEntry;
 
   BottomSheet getBottomSheet() {
+
+    actionIcon = Icon(Icons.stop);
+
       return BottomSheet(
         builder: (context) => ListTile(
+          leading: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              "${NumberFormat("00").format(hours)}:${NumberFormat("00").format(minutes)}:${NumberFormat("00").format(seconds)}",
+                  style: TextStyle(
+                fontSize: 20
+            ),
+            ),
+          ),
           title: Text(
               runningEntry!.project?.projectName ?? "No Project"
           ),
@@ -47,7 +59,15 @@ class _TogglHomeScreenState extends State<TogglHomeScreen> {
     if (actionIcon.icon == Icons.add) {
       Navigator.pushNamed(context, TimeEntryScreen.addEntry);
     }
+    else {
+      runningEntry!.endTime = DateTime.now();
+      TimeEntry.dummyEntries.add(runningEntry!);
+      timer!.cancel();
+      runningEntry = null;
+      setState(() {
 
+      });
+    }
   }
 
   @override
@@ -55,21 +75,23 @@ class _TogglHomeScreenState extends State<TogglHomeScreen> {
     // TODO: implement initState
     super.initState();
 
-    timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      setState(() {
-        seconds += 1;
-        if (seconds == 60) {
-          minutes += 1;
-          seconds = 0;
-        }
+    // if (runningEntry != null) {
+      timer = Timer.periodic(Duration(seconds: 1), (timer) {
+        setState(() {
+          seconds += 1;
+          if (seconds == 60) {
+            minutes += 1;
+            seconds = 0;
+          }
 
-        if (minutes == 60) {
-          hours += 1;
-          minutes = 0;
-          seconds = 0;
-        }
+          if (minutes == 60) {
+            hours += 1;
+            minutes = 0;
+            seconds = 0;
+          }
+        });
       });
-    });
+    // }
   }
 
   @override

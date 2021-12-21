@@ -81,11 +81,30 @@ class _TimeEntryScreenState extends State<TimeEntryScreen> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: null
+              child: TextField(
+                controller: tfController,
+                decoration: InputDecoration(
+                  labelText: "Description"
+                ),
+                onSubmitted: (value) => timeEntry.description = value,
+              )
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: null
+              child: DropdownButtonFormField(
+                onChanged: (value) {
+                  timeEntry.project = Project.dummyProjects.firstWhere((project) => project.projectName == value);
+                },
+                items: [
+                  for (var project in Project.dummyProjects)
+                    DropdownMenuItem(
+                      child: Text(
+                        project.projectName
+                      ),
+                      value: project.projectName,
+                    )
+                ],
+              )
             ),
           ],
         ),

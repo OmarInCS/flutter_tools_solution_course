@@ -37,6 +37,7 @@ class MyApp extends StatelessWidget {
 
       routes: {
         TimeEntryScreen.addEntry: (context) => TimeEntryScreen(),
+        TogglHomeScreen.routeName: (context) => TogglHomeScreen(),
       },
     );
   }

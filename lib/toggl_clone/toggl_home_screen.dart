@@ -13,7 +13,7 @@ class TogglHomeScreen extends StatefulWidget {
   TogglHomeScreen({Key? key, this.runningEntry}) : super(key: key);
 
   TimeEntry? runningEntry;
-
+  static const routeName = "/home";
 
   @override
   _TogglHomeScreenState createState() => _TogglHomeScreenState();

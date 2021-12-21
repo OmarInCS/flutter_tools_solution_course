@@ -20,15 +20,19 @@ class _TimeEntryScreenState extends State<TimeEntryScreen> {
   var tfController = TextEditingController();
 
   Future<DateTime> getDateTime({getDate = true, String? dateLabel, String? timeLabel}) async {
-
-    var date = await showDatePicker(
-      context: context,
-      firstDate: DateTime.now().subtract(Duration(days: 7)),
-      lastDate: DateTime.now(),
-      initialDate: DateTime.now(),
-      helpText: dateLabel
-    ) ?? DateTime.now();
-
+    DateTime? date;
+    if (getDate) {
+      date = await showDatePicker(
+          context: context,
+          firstDate: DateTime.now().subtract(Duration(days: 7)),
+          lastDate: DateTime.now(),
+          initialDate: DateTime.now(),
+          helpText: dateLabel
+      ) ?? DateTime.now();
+    }
+    else {
+      date = timeEntry.startTime;
+    }
     var time = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
@@ -86,7 +90,9 @@ class _TimeEntryScreenState extends State<TimeEntryScreen> {
                 decoration: InputDecoration(
                   labelText: "Description"
                 ),
-                onSubmitted: (value) => timeEntry.description = value,
+                onSubmitted: (value) {
+                  timeEntry.description = value;
+                },
               )
             ),
             Padding(
@@ -109,7 +115,27 @@ class _TimeEntryScreenState extends State<TimeEntryScreen> {
           ],
         ),
       ),
+    floatingActionButton: Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        FloatingActionButton(
+          heroTag: null,
+          child: Icon(Icons.add),
+          onPressed: () async {
+            timeEntry.endTime = await getDateTime(getDate: false, timeLabel: "End Time");
+            TimeEntry.dummyEntries.add(timeEntry);
+            Navigator.pushNamed(context, TogglHomeScreen.routeName);
+          },
+        ),
+        SizedBox(height: 8,),
+        FloatingActionButton(
+          heroTag: null,
+          child: Icon(Icons.play_arrow),
+          onPressed: null,
+        ),
 
+      ],
+    ),
     );
   }
 }

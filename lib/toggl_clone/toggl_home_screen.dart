@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
@@ -97,15 +98,42 @@ class _TogglHomeScreenState extends State<TogglHomeScreen> {
       body: GroupedListView(
         elements: TimeEntry.dummyEntries..sort((te1, te2) => te1.startTime.difference(te2.startTime).inSeconds),
         groupBy: (TimeEntry element) => DateFormat.yMMMd().format(element.startTime),
-        groupSeparatorBuilder: (String dayDate) => Text(
-          dayDate
-        ),
-        itemBuilder: (context, TimeEntry element) => ListTile(
-          title: Text(
-              element.project?.projectName ?? "No Project"
+        groupSeparatorBuilder: (String dayDate) => Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            dayDate
           ),
-          subtitle: Text(
-              element.description
+        ),
+        order: GroupedListOrder.DESC,
+        itemBuilder: (context, TimeEntry element) => Card(
+          elevation: 8,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: BorderSide(
+              color: Theme.of(context).accentColor,
+              width: 2
+            )
+          ),
+          child: ListTile(
+            title: Text(
+                element.project?.projectName ?? "No Project"
+            ),
+            subtitle: Text(
+                element.description
+            ),
+            leading: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(DateFormat.Hm().format(element.startTime)),
+                SizedBox(height: 8,),
+                Text(DateFormat.Hm().format(element.endTime!)),
+              ],
+            ),
+            trailing: Text(
+              NumberFormat.currency(symbol: "SAR ").format(
+                element.endTime!.difference(element.startTime).inMinutes / 60 * element.project!.hourRate
+              )
+            ),
           ),
         ),
       ),

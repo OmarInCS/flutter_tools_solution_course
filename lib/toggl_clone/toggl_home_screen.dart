@@ -26,9 +26,20 @@ class _TogglHomeScreenState extends State<TogglHomeScreen> {
   int minutes = 0;
   int hours = 0;
   Icon actionIcon = Icon(Icons.add);
+  TimeEntry? runningEntry;
 
-  BottomSheet? getBottomSheet() {
-
+  BottomSheet getBottomSheet() {
+      return BottomSheet(
+        builder: (context) => ListTile(
+          title: Text(
+              runningEntry!.project?.projectName ?? "No Project"
+          ),
+          subtitle: Text(
+              runningEntry!.description
+          ),
+        ),
+        onClosing: () {},
+      );
   }
 
   void handleFloatButtonAction() {
@@ -63,6 +74,9 @@ class _TogglHomeScreenState extends State<TogglHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    runningEntry = ModalRoute.of(context)!.settings.arguments as TimeEntry?;
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Time Entries"),
@@ -145,6 +159,7 @@ class _TogglHomeScreenState extends State<TogglHomeScreen> {
         child: actionIcon,
         onPressed: handleFloatButtonAction,
       ),
+      bottomSheet: runningEntry != null ? getBottomSheet() : null,
     );
   }
 }

@@ -123,6 +123,7 @@ class _TimeEntryScreenState extends State<TimeEntryScreen> {
           child: Icon(Icons.add),
           onPressed: () async {
             timeEntry.endTime = await getDateTime(getDate: false, timeLabel: "End Time");
+            timeEntry.description = tfController.text;
             TimeEntry.dummyEntries.add(timeEntry);
             Navigator.pushNamed(context, TogglHomeScreen.routeName);
           },
@@ -131,7 +132,10 @@ class _TimeEntryScreenState extends State<TimeEntryScreen> {
         FloatingActionButton(
           heroTag: null,
           child: Icon(Icons.play_arrow),
-          onPressed: null,
+          onPressed: () {
+            timeEntry.description = tfController.text;
+            Navigator.pushNamed(context, TogglHomeScreen.routeName, arguments: timeEntry);
+          },
         ),
 
       ],

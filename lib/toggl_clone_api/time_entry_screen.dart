@@ -147,6 +147,7 @@ class _TimeEntryScreenState extends State<TimeEntryScreen> {
             timeEntry.description = tfController.text;
             // TimeEntry.dummyEntries.add(timeEntry);
             // _db.insertTimeEntry(timeEntry);
+            await _dio.insertTimeEntry(timeEntry);
             Navigator.pushNamed(context, TogglHomeScreen.routeName);
           },
         ),

@@ -31,4 +31,11 @@ class DioClient {
     }
   }
 
+  Future<bool> insertTimeEntry(TimeEntry entry) async {
+    var response = await _dio.post(_baseUrl + "/entries", data: entry.toJson());
+
+    print("Data inserted");
+    return response.statusCode == 200;
+  }
+
 }

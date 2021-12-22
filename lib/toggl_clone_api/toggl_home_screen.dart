@@ -65,6 +65,7 @@ class _TogglHomeScreenState extends State<TogglHomeScreen> {
       runningEntry!.endTime = DateTime.now();
       // TimeEntry.dummyEntries.add(runningEntry!);
       // await _db.insertTimeEntry(runningEntry!);
+      await _dio.insertTimeEntry(runningEntry!);
       timer!.cancel();
       runningEntry = null;
       actionIcon = Icon(Icons.add);

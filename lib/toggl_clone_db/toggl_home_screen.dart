@@ -56,7 +56,7 @@ class _TogglHomeScreenState extends State<TogglHomeScreen> {
       );
   }
 
-  void handleFloatButtonAction() {
+  Future<void> handleFloatButtonAction() async {
 
     if (actionIcon.icon == Icons.add) {
       Navigator.pushNamed(context, TimeEntryScreen.addEntry);
@@ -64,6 +64,7 @@ class _TogglHomeScreenState extends State<TogglHomeScreen> {
     else {
       runningEntry!.endTime = DateTime.now();
       // TimeEntry.dummyEntries.add(runningEntry!);
+      await _db.insertTimeEntry(runningEntry!);
       timer!.cancel();
       runningEntry = null;
       actionIcon = Icon(Icons.add);

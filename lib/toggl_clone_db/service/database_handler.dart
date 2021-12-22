@@ -97,4 +97,9 @@ class DatabaseHandler {
     return newResult.map((e) => TimeEntry.fromMap(e)).toList();
   }
 
+  Future<void> insertTimeEntry(TimeEntry entry) async {
+    final db = await initDatabase();
+    await db.insert("time_entries", entry.toMap());
+  }
+
 }

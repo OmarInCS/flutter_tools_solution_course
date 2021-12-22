@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:aladl_project/toggl_clone_api/service/dio_client.dart';
+import 'package:aladl_project/toggl_clone_api/widgets/report_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
@@ -29,6 +30,7 @@ class _TogglHomeScreenState extends State<TogglHomeScreen> {
   Icon actionIcon = Icon(Icons.add);
   TimeEntry? runningEntry;
   late DioClient _dio;
+  bool showReport = false;
 
   BottomSheet getBottomSheet() {
 
@@ -138,6 +140,12 @@ class _TogglHomeScreenState extends State<TogglHomeScreen> {
             ListTile(
               leading: Icon(Icons.timer),
               title: Text("Time Entries"),
+              onTap: () {
+                showReport = false;
+                setState(() {
+
+                });
+              },
             ),
             ListTile(
               leading: Icon(Icons.folder),
@@ -146,12 +154,18 @@ class _TogglHomeScreenState extends State<TogglHomeScreen> {
             ListTile(
               leading: Icon(Icons.receipt),
               title: Text("Reports"),
+              onTap: () {
+                showReport = true;
+                setState(() {
+
+                });
+              },
             ),
 
           ],
         ),
       ),
-      body: FutureBuilder(
+      body: showReport ? ReportWidget() : FutureBuilder(
         future: _dio.getTimeEntries(),
         builder: (context, AsyncSnapshot<List<TimeEntry>?> snapshot) {
           if (snapshot.hasData) {

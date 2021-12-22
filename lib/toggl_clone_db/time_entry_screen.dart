@@ -1,4 +1,5 @@
 
+import 'package:aladl_project/toggl_clone_db/service/database_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -16,8 +17,9 @@ class TimeEntryScreen extends StatefulWidget {
 
 class _TimeEntryScreenState extends State<TimeEntryScreen> {
 
-  TimeEntry timeEntry = new TimeEntry(DateTime.now(), "...");
+  TimeEntry timeEntry = new TimeEntry(startTime: DateTime.now(), description: "...");
   var tfController = TextEditingController();
+  late DatabaseHandler _db;
 
   Future<DateTime> getDateTime({getDate = true, String? dateLabel, String? timeLabel}) async {
     DateTime? date;
@@ -41,6 +43,14 @@ class _TimeEntryScreenState extends State<TimeEntryScreen> {
 
     return DateTime(date.year, date.month, date.day, time.hour, time.minute);
 
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    _db = DatabaseHandler();
   }
 
   @override
@@ -97,19 +107,29 @@ class _TimeEntryScreenState extends State<TimeEntryScreen> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: DropdownButtonFormField(
-                onChanged: (value) {
-                  timeEntry.project = Project.dummyProjects.firstWhere((project) => project.projectName == value);
+              child: FutureBuilder(
+                future: _db.getProjects(),
+                builder: (context, AsyncSnapshot<List<Project>> snapshot) {
+                  if (snapshot.hasData) {
+                    return DropdownButtonFormField(
+                      onChanged: (value) {
+                        timeEntry.project = snapshot.data!.firstWhere((project) => project.projectName == value);
+                      },
+                      items: [
+                        for (var project in snapshot.data!)
+                          DropdownMenuItem(
+                            child: Text(
+                                project.projectName
+                            ),
+                            value: project.projectName,
+                          )
+                      ],
+                    );
+                  }
+                  else {
+                    return Center(child: CircularProgressIndicator());
+                  }
                 },
-                items: [
-                  for (var project in Project.dummyProjects)
-                    DropdownMenuItem(
-                      child: Text(
-                        project.projectName
-                      ),
-                      value: project.projectName,
-                    )
-                ],
               )
             ),
           ],
@@ -124,7 +144,7 @@ class _TimeEntryScreenState extends State<TimeEntryScreen> {
           onPressed: () async {
             timeEntry.endTime = await getDateTime(getDate: false, timeLabel: "End Time");
             timeEntry.description = tfController.text;
-            TimeEntry.dummyEntries.add(timeEntry);
+            // TimeEntry.dummyEntries.add(timeEntry);
             Navigator.pushNamed(context, TogglHomeScreen.routeName);
           },
         ),

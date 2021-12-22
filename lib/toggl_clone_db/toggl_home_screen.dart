@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'model/time_entry.dart';
+import 'service/database_handler.dart';
 import 'time_entry_screen.dart';
 
 class TogglHomeScreen extends StatefulWidget {
@@ -27,6 +28,7 @@ class _TogglHomeScreenState extends State<TogglHomeScreen> {
   int hours = 0;
   Icon actionIcon = Icon(Icons.add);
   TimeEntry? runningEntry;
+  late DatabaseHandler _db;
 
   BottomSheet getBottomSheet() {
 
@@ -61,7 +63,7 @@ class _TogglHomeScreenState extends State<TogglHomeScreen> {
     }
     else {
       runningEntry!.endTime = DateTime.now();
-      TimeEntry.dummyEntries.add(runningEntry!);
+      // TimeEntry.dummyEntries.add(runningEntry!);
       timer!.cancel();
       runningEntry = null;
       actionIcon = Icon(Icons.add);
@@ -76,6 +78,7 @@ class _TogglHomeScreenState extends State<TogglHomeScreen> {
     // TODO: implement initState
     super.initState();
 
+    _db = DatabaseHandler();
 
   }
 
@@ -146,47 +149,57 @@ class _TogglHomeScreenState extends State<TogglHomeScreen> {
           ],
         ),
       ),
-      body: GroupedListView(
-        elements: TimeEntry.dummyEntries..sort((te1, te2) => te1.startTime.difference(te2.startTime).inSeconds),
-        groupBy: (TimeEntry element) => DateFormat.yMMMd().format(element.startTime),
-        groupSeparatorBuilder: (String dayDate) => Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            dayDate
-          ),
-        ),
-        order: GroupedListOrder.DESC,
-        itemBuilder: (context, TimeEntry element) => Card(
-          elevation: 8,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-            side: BorderSide(
-              color: Theme.of(context).accentColor,
-              width: 2
-            )
-          ),
-          child: ListTile(
-            title: Text(
-                element.project?.projectName ?? "No Project"
-            ),
-            subtitle: Text(
-                element.description
-            ),
-            leading: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(DateFormat.Hm().format(element.startTime)),
-                SizedBox(height: 8,),
-                Text(DateFormat.Hm().format(element.endTime!)),
-              ],
-            ),
-            trailing: Text(
-              NumberFormat.currency(symbol: "SAR ").format(
-                element.endTime!.difference(element.startTime).inMinutes / 60 * element.project!.hourRate
-              )
-            ),
-          ),
-        ),
+      body: FutureBuilder(
+        future: _db.getTimeEntries(),
+        builder: (context, AsyncSnapshot<List<TimeEntry>> snapshot) {
+          if (snapshot.hasData) {
+            return GroupedListView(
+              elements: snapshot.data!..sort((te1, te2) => te1.startTime.difference(te2.startTime).inSeconds),
+              groupBy: (TimeEntry element) => DateFormat.yMMMd().format(element.startTime),
+              groupSeparatorBuilder: (String dayDate) => Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                    dayDate
+                ),
+              ),
+              order: GroupedListOrder.DESC,
+              itemBuilder: (context, TimeEntry element) => Card(
+                elevation: 8,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    side: BorderSide(
+                        color: Theme.of(context).accentColor,
+                        width: 2
+                    )
+                ),
+                child: ListTile(
+                  title: Text(
+                      element.project?.projectName ?? "No Project"
+                  ),
+                  subtitle: Text(
+                      element.description
+                  ),
+                  leading: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(DateFormat.Hm().format(element.startTime)),
+                      SizedBox(height: 8,),
+                      Text(DateFormat.Hm().format(element.endTime!)),
+                    ],
+                  ),
+                  trailing: Text(
+                      NumberFormat.currency(symbol: "SAR ").format(
+                          element.endTime!.difference(element.startTime).inMinutes / 60 * element.project!.hourRate
+                      )
+                  ),
+                ),
+              ),
+            );
+          }
+          else {
+            return Center(child: CircularProgressIndicator());
+          }
+        },
       ),
       floatingActionButton: FloatingActionButton(
         child: actionIcon,

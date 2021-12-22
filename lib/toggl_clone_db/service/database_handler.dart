@@ -1,5 +1,7 @@
 
 
+import 'package:aladl_project/toggl_clone_db/model/project.dart';
+import 'package:aladl_project/toggl_clone_db/model/time_entry.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -76,6 +78,23 @@ class DatabaseHandler {
     );
   }
 
+  Future<List<Project>> getProjects() async {
+    final db = await initDatabase();
+    List<Map<String, dynamic>> result = await db.query("projects");
+    return result.map((e) => Project.fromMap(e)).toList();
+  }
 
+  Future<List<TimeEntry>> getTimeEntries() async {
+    final db = await initDatabase();
+    List<Map<String, dynamic>> result = await db.query("time_entries");
+    List<Map<String, dynamic>> newResult = [];
+    for (var entryMap in result) {
+      Map<String, dynamic> newEntryMap = Map.from(entryMap);
+      List<Map<String, dynamic>> projectMap = await db.query("projects", where: "projectId = ?", whereArgs: [newEntryMap["projectId"]]);
+      newEntryMap["project"] = Project.fromMap(projectMap[0]);
+      newResult.add(newEntryMap);
+    }
+    return newResult.map((e) => TimeEntry.fromMap(e)).toList();
+  }
 
 }

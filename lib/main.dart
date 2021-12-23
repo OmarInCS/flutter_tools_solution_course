@@ -2,6 +2,7 @@ import 'package:aladl_project/gmap_app/gmap_screen.dart';
 import 'package:aladl_project/guess_app/guess_screen.dart';
 import 'package:aladl_project/hello_app/hello_screen.dart';
 import 'package:aladl_project/quiz_app/quiz_home_screen.dart';
+import 'package:aladl_project/take_pics/take-pic-screen.dart';
 import 'package:aladl_project/toggl_clone_api/time_entry_screen.dart';
 import 'package:aladl_project/toggl_clone_api/toggl_home_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -48,7 +49,8 @@ class MyApp extends StatelessWidget {
       // home: GuessScreen(),
       // home: QuizHomeScreen(),
       // home: TogglHomeScreen(),
-      home: GMapScreen(),
+      // home: GMapScreen(),
+      home: TakePicScreen(),
 
       routes: {
         TimeEntryScreen.addEntry: (context) => TimeEntryScreen(),

@@ -1,3 +1,4 @@
+import 'package:aladl_project/gmap_app/gmap_screen.dart';
 import 'package:aladl_project/guess_app/guess_screen.dart';
 import 'package:aladl_project/hello_app/hello_screen.dart';
 import 'package:aladl_project/quiz_app/quiz_home_screen.dart';
@@ -33,7 +34,8 @@ class MyApp extends StatelessWidget {
       // home: HelloScreen(),
       // home: GuessScreen(),
       // home: QuizHomeScreen(),
-      home: TogglHomeScreen(),
+      // home: TogglHomeScreen(),
+      home: GMapScreen(),
 
       routes: {
         TimeEntryScreen.addEntry: (context) => TimeEntryScreen(),

@@ -1,6 +1,7 @@
 
 import 'dart:math';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -55,10 +56,10 @@ class _GMapScreenState extends State<GMapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("My Map"),
+        title: Text(tr("app-title")),
         actions: [
           TextButton(
-            child: Text("Random",
+            child: Text("btn-text".tr(),
               style: TextStyle(
                   color: Colors.white
               ),
@@ -73,7 +74,25 @@ class _GMapScreenState extends State<GMapScreen> {
                 )
               );
             },
-          )
+          ),
+    TextButton(
+    child: Text("language".tr(),
+    style: TextStyle(
+    color: Colors.white
+    ),
+    ),
+      onPressed: () {
+        if (context.locale.languageCode == "en") {
+          context.setLocale(Locale("ar", "SA"));
+        }
+        else {
+          context.setLocale(Locale("en", "US"));
+        }
+        setState(() {
+
+        });
+      },
+    )
         ],
       ),
       body: FutureBuilder(
@@ -89,7 +108,7 @@ class _GMapScreenState extends State<GMapScreen> {
               children: [
                 Center(
                   child: Text(
-                    "User Location:\n${snapshot.data!.latitude}, ${snapshot.data!.longitude}",
+                    "inner-text".tr(args: [snapshot.data!.latitude.toString(), snapshot.data!.longitude.toString()]),
                     style: TextStyle(
                       fontSize: 20
                     ),

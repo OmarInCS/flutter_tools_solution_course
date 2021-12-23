@@ -4,10 +4,20 @@ import 'package:aladl_project/hello_app/hello_screen.dart';
 import 'package:aladl_project/quiz_app/quiz_home_screen.dart';
 import 'package:aladl_project/toggl_clone_api/time_entry_screen.dart';
 import 'package:aladl_project/toggl_clone_api/toggl_home_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
+  runApp(
+      EasyLocalization(
+          child: MyApp(),
+        supportedLocales: [Locale("en", "US"), Locale("ar", "SA")],
+        path: "assets/locales",
+        fallbackLocale: Locale("en", "US"),
+      )
+  );
 }
 
 class MyApp extends StatelessWidget {

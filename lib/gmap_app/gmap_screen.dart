@@ -56,7 +56,7 @@ class _GMapScreenState extends State<GMapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(tr("app-title")),
+        title: Text(tr("app_title")),
         actions: [
           TextButton(
             child: Text("btn-text".tr(),

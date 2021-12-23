@@ -1,6 +1,6 @@
 {
-  "app-title": "My App.",
+  "app_title": "My App.",
   "btn-text": "Random",
   "inner-text": "User Location\n{} , {}",
-  "langauage": "عربي"
+  "language": "عربي"
 }

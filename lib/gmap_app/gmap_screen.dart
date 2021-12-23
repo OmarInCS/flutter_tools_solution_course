@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class GMapScreen extends StatefulWidget {
   const GMapScreen({Key? key}) : super(key: key);
@@ -12,6 +13,8 @@ class GMapScreen extends StatefulWidget {
 class _GMapScreenState extends State<GMapScreen> {
 
   late Future<Position> userLocation;
+  late GoogleMapController mapController;
+  Set<Marker> myLocations = Set();
 
   Future<Position> getUserLocation() async {
     bool serviceEnabled;
@@ -55,6 +58,11 @@ class _GMapScreenState extends State<GMapScreen> {
         future: userLocation,
         builder: (context, AsyncSnapshot<Position> snapshot) {
           if(snapshot.hasData) {
+            myLocations.add(Marker(
+              markerId: MarkerId("0"),
+              position: LatLng(snapshot.data!.latitude, snapshot.data!.longitude),
+              infoWindow: InfoWindow(title: "My Location")
+            ));
             return Column(
               children: [
                 Center(
@@ -64,6 +72,16 @@ class _GMapScreenState extends State<GMapScreen> {
                       fontSize: 20
                     ),
                     textAlign: TextAlign.center,
+                  ),
+                ),
+                Expanded(
+                  child: GoogleMap(
+                    initialCameraPosition: CameraPosition(
+                      target: LatLng(snapshot.data!.latitude, snapshot.data!.longitude),
+                      zoom: 16
+                    ),
+                    markers: myLocations,
+                    onMapCreated: (controller) => mapController = controller,
                   ),
                 )
               ],
